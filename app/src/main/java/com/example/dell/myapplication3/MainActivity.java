@@ -18,6 +18,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -31,11 +35,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener childEventListener;
+    private GoogleApiClient mGoogleApiClient;
 
     private EditText editText_message;
     private MessageAdapter messageAdapter;
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
            userName = extras.getString("user_name");
         }
         Toast.makeText(getApplicationContext(),userName,Toast.LENGTH_LONG).show();
+
 
 
 
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
                     //User signed in
-                    Toast.makeText(getApplicationContext(),"User is signed in",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"User is signed in",Toast.LENGTH_LONG).show();
                 }
                 else{
                     //User Signed Out
@@ -211,4 +218,6 @@ public class MainActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
 }
