@@ -119,13 +119,8 @@ public class MainActivity extends AppCompatActivity {
                     fab.setEnabled(false);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {}
-
-
-
-
         });
 
         //Authentication code.
@@ -140,9 +135,11 @@ public class MainActivity extends AppCompatActivity {
                 if(user != null){
                     //User signed in
                     //Toast.makeText(getApplicationContext(),"User is signed in",Toast.LENGTH_LONG).show();
+                    userSignedInInitialize();
                 }
                 else{
                     //User Signed Out
+                    userSignedOutCleanUp();
                     startActivity(new Intent(MainActivity.this,LoginActivity.class));
                     finish();
                 }
@@ -155,31 +152,37 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference().child("messages");
 
-        childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
-                messageAdapter.add(chatMessage);
+    }
 
-            }
+    private void userSignedOutCleanUp() {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+        if(childEventListener != null)
+        {
+            mDatabaseReference.removeEventListener(childEventListener);
+        }
+    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+    private void userSignedInInitialize() {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+        if(childEventListener == null) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        mDatabaseReference.addChildEventListener(childEventListener);
-
-
-
-
+            childEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
+                    messageAdapter.add(chatMessage);
+                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            };
+            mDatabaseReference.addChildEventListener(childEventListener);
+        }
     }
 
     @Override
@@ -218,6 +221,4 @@ public class MainActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-
 }
