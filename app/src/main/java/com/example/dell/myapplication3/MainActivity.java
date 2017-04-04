@@ -1,6 +1,7 @@
 package com.example.dell.myapplication3;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,6 +32,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +42,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int RC_PHOTO_PICKER = 2;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener childEventListener;
     private GoogleApiClient mGoogleApiClient;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference chatPhotostorageReference;
 
     private EditText editText_message;
     private MessageAdapter messageAdapter;
@@ -98,14 +107,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //For Attachment PickUp
-        floatingActionButton_att.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         //For message write
         editText_message.addTextChangedListener(new TextWatcher() {
             @Override
@@ -147,11 +148,58 @@ public class MainActivity extends AppCompatActivity {
         };
 
         //Databse Code
-        //Get Databse instance
+        //Get Databse instance and reference
 
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference().child("messages");
 
+        //Storage Code
+        //Get Storage Reference and instance
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        chatPhotostorageReference = firebaseStorage.getReference().child("chat_photos");
+
+        //For Attachment PickUp
+        floatingActionButton_att.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
+                startActivityForResult(Intent.createChooser(intent,"Complete action using"),RC_PHOTO_PICKER);
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_PHOTO_PICKER && requestCode == RESULT_OK){
+            Uri selectImageUri = data.getData();
+
+            //Get a reference to store file at chat_photos/<FILENAME>
+            StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
+
+            //Upload File To Firebase Storage
+            photoRef.putFile(selectImageUri).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    ChatMessage chatMessage = new ChatMessage(null,userName,downloadUrl.toString());
+                    mDatabaseReference.push().setValue(chatMessage);
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+        }
     }
 
     private void userSignedOutCleanUp() {

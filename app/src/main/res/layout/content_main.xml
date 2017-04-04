@@ -48,9 +48,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="40dp"
             android:ems="10"
-            android:hint="Type a message"
+            android:hint="type a message..."
             android:inputType="textPersonName" />
     </RelativeLayout>
 
