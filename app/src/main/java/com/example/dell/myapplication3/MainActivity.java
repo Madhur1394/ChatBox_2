@@ -99,10 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //For Save Messgaes
                 ChatMessage chatMessage = new ChatMessage(editText_message.getText().toString().trim(),userName,null);
-
-
                 mDatabaseReference.push().setValue(chatMessage);
-
                 editText_message.setText("");
             }
         });
