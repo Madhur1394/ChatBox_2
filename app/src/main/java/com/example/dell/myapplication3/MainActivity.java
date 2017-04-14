@@ -173,30 +173,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_PHOTO_PICKER && requestCode == RESULT_OK){
+        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data.getData()!=null){
             Uri selectImageUri = data.getData();
-
-            //Get a reference to store file at chat_photos/<FILENAME>
-            StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
-
-            //Upload File To Firebase Storage
-            photoRef.putFile(selectImageUri).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                    ChatMessage chatMessage = new ChatMessage(null,userName,downloadUrl.toString());
-                    mDatabaseReference.push().setValue(chatMessage);
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
-
+            uploadFile(selectImageUri);
         }
+    }
+
+    private void uploadFile(Uri selectImageUri) {
+
+        //Get a reference to store file at chat_photos/<FILENAME>
+        StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
+
+        //Upload File To Firebase Storage
+        photoRef.putFile(selectImageUri).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString());
+                mDatabaseReference.push().setValue(chatMessage);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     private void userSignedOutCleanUp() {
