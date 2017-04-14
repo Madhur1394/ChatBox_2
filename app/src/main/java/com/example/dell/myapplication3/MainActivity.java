@@ -1,5 +1,6 @@
 package com.example.dell.myapplication3;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -181,6 +183,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void uploadFile(Uri selectImageUri) {
 
+        //displaying progress dialog while image is uploading
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading");
+        progressDialog.show();
+
         //Get a reference to store file at chat_photos/<FILENAME>
         StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
 
@@ -189,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                //dismissing the progress dialog
+                progressDialog.dismiss();
 
                 ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString());
                 mDatabaseReference.push().setValue(chatMessage);
@@ -197,9 +206,18 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 
                     }
-                });
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                //displaying the upload progress
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+            }
+        });
     }
 
     private void userSignedOutCleanUp() {
