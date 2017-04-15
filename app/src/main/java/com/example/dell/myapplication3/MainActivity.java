@@ -226,9 +226,11 @@ public class MainActivity extends AppCompatActivity {
         {
             mDatabaseReference.removeEventListener(childEventListener);
         }
+        messageAdapter.clear();
     }
 
     private void userSignedInInitialize() {
+
 
         if(childEventListener == null) {
 
@@ -237,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
                     messageAdapter.add(chatMessage);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -278,6 +281,12 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
