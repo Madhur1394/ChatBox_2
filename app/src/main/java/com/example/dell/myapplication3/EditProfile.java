@@ -108,7 +108,7 @@ public class EditProfile extends AppCompatActivity {
                 }
                 else if(editEmail.equals("")){
                     progressBar.setVisibility(View.GONE);
-                    editTextEmail.setError("Please enter New Email id");
+                    editTextEmail.setError("Please enter New Email Id");
                 }
             }
         });
