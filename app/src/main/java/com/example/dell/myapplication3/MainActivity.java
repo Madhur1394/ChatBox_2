@@ -172,15 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data.getData()!=null){
-            Uri selectImageUri = data.getData();
-            uploadFile(selectImageUri);
-        }
-    }
-
     private void uploadFile(Uri selectImageUri) {
 
         //displaying progress dialog while image is uploading
@@ -253,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         messageAdapter.clear();
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -301,5 +291,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data.getData()!=null){
+            Uri selectImageUri = data.getData();
+            uploadFile(selectImageUri);
+        }
     }
 }
