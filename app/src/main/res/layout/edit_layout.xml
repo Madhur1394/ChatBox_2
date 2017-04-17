@@ -14,7 +14,9 @@
         android:hint="Edit Password"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/edit_progressbar"
-        android:layout_alignEnd="@+id/edit_progressbar" />
+        android:layout_alignEnd="@+id/edit_progressbar"
+        android:textColor="@color/input_login"
+        android:textColorHint="@color/input_login_hint"/>
 
     <Button
         android:id="@+id/editPasswordButton"
@@ -32,10 +34,10 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editPasswordButton"
+        android:layout_alignBottom="@+id/editTextEmail"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="149dp"
-        android:visibility="invisible" />
+        android:layout_marginBottom="19dp"
+        android:visibility="visible" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -46,7 +48,9 @@
         android:hint="Edit Email"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/editPassword"
-        android:layout_alignStart="@+id/editPassword" />
+        android:layout_alignStart="@+id/editPassword"
+        android:textColor="@color/input_login"
+        android:textColorHint="@color/input_login_hint"/>
 
     <Button
         android:id="@+id/button_email"
