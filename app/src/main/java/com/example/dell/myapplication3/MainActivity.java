@@ -295,8 +295,11 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
             return true;
         }
+        if (id == R.id.action_edit) {
+            startActivity(new Intent(MainActivity.this,EditProfile.class));
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
-
 }
