@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class EditProfile extends AppCompatActivity {
 
     private EditText editTextPassword,editTextEmail;
     private Button buttonEditPassword,buttonEditEmail;
+    private ImageButton homeButton;
     private ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
@@ -37,6 +39,7 @@ public class EditProfile extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         buttonEditPassword = (Button) findViewById(R.id.editPasswordButton);
         buttonEditEmail = (Button) findViewById(R.id.button_email);
+        homeButton = (ImageButton) findViewById(R.id.homeButton);
         progressBar = (ProgressBar) findViewById(R.id.edit_progressbar);
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -101,7 +104,7 @@ public class EditProfile extends AppCompatActivity {
                             }
                             else{
                                 progressBar.setVisibility(View.GONE);
-                                Toast.makeText(getApplicationContext(),"Email changing is unsuccessful",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Task is unsuccessful",Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -110,6 +113,14 @@ public class EditProfile extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     editTextEmail.setError("Please enter New Email Id");
                 }
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EditProfile.this,MainActivity.class));
+                finish();
             }
         });
     }

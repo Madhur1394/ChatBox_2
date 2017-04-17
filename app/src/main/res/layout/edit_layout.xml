@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,26 +8,24 @@
         android:id="@+id/editPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="160dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Edit Password"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="23dp"
-        android:layout_marginStart="23dp" />
+        android:layout_alignRight="@+id/edit_progressbar"
+        android:layout_alignEnd="@+id/edit_progressbar" />
 
     <Button
         android:id="@+id/editPasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Edit"
         android:layout_alignTop="@+id/editPassword"
-        android:layout_marginLeft="26dp"
-        android:layout_marginStart="26dp"
-        android:layout_toEndOf="@+id/editPassword"
-        android:layout_toRightOf="@+id/editPassword"
-        android:text="Edit" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp" />
 
     <ProgressBar
         android:id="@+id/edit_progressbar"
@@ -42,13 +41,12 @@
         android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Edit Email"
-        android:layout_below="@+id/editPasswordButton"
-        android:layout_toLeftOf="@+id/editPasswordButton"
-        android:layout_toStartOf="@+id/editPasswordButton" />
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/editPassword"
+        android:layout_alignStart="@+id/editPassword" />
 
     <Button
         android:id="@+id/button_email"
@@ -58,5 +56,14 @@
         android:layout_alignLeft="@+id/editPasswordButton"
         android:layout_alignStart="@+id/editPasswordButton"
         android:text="Edit" />
+
+    <ImageButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        app:srcCompat="@drawable/chat" />
 
 </RelativeLayout>
