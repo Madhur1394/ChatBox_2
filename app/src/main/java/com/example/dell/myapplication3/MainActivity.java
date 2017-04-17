@@ -220,17 +220,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void userSignedOutCleanUp() {
-
-        if(childEventListener != null)
-        {
-            mDatabaseReference.removeEventListener(childEventListener);
-        }
-        messageAdapter.clear();
-    }
-
     private void userSignedInInitialize() {
-
 
         if(childEventListener == null) {
 
@@ -251,6 +241,38 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {}
             };
             mDatabaseReference.addChildEventListener(childEventListener);
+        }
+    }
+
+    private void userSignedOutCleanUp() {
+
+        if(childEventListener != null)
+        {
+            mDatabaseReference.removeEventListener(childEventListener);
+        }
+        messageAdapter.clear();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        progressBar.setVisibility(View.GONE);
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
@@ -277,23 +299,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
 }

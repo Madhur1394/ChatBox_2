@@ -28,7 +28,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="15dp"
             android:divider="@android:color/transparent"
-            android:dividerHeight="4dp"
+            android:dividerHeight="10dp"
             android:stackFromBottom="true"
             android:transcriptMode="alwaysScroll"
             tools:listitem="@layout/item_message" />
