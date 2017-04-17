@@ -35,5 +35,28 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/editPasswordButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="149dp" />
+        android:layout_marginTop="149dp"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Edit Email"
+        android:layout_below="@+id/editPasswordButton"
+        android:layout_toLeftOf="@+id/editPasswordButton"
+        android:layout_toStartOf="@+id/editPasswordButton" />
+
+    <Button
+        android:id="@+id/button_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editTextEmail"
+        android:layout_alignLeft="@+id/editPasswordButton"
+        android:layout_alignStart="@+id/editPasswordButton"
+        android:text="Edit" />
+
 </RelativeLayout>

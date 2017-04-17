@@ -22,13 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class EditProfile extends AppCompatActivity {
 
-    private EditText editTextPassword;
-    private Button buttonEditPassword;
+    private EditText editTextPassword,editTextEmail;
+    private Button buttonEditPassword,buttonEditEmail;
     private ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +34,9 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.edit_layout);
 
         editTextPassword = (EditText) findViewById(R.id.editPassword);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         buttonEditPassword = (Button) findViewById(R.id.editPasswordButton);
+        buttonEditEmail = (Button) findViewById(R.id.button_email);
         progressBar = (ProgressBar) findViewById(R.id.edit_progressbar);
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -50,6 +50,7 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String editPass = editTextPassword.getText().toString().trim();
+                progressBar.setVisibility(View.VISIBLE);
 
                 if(user != null && !editPass.equals("")){
                     if(editPass.length() < 6){
@@ -63,9 +64,11 @@ public class EditProfile extends AppCompatActivity {
 
                                 if(task != null){
                                     Toast.makeText(getApplicationContext(),"Password Is Changed",Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.GONE);
                                     signOUT();
                                 }
                                 else {
+                                    progressBar.setVisibility(View.GONE);
                                     Toast.makeText(getApplicationContext(),"Password Changed unsuccessful",Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -73,11 +76,42 @@ public class EditProfile extends AppCompatActivity {
                     }
                 }
                 else if(editPass.equals("")) {
+                    progressBar.setVisibility(View.GONE);
                     editTextPassword.setError("Enter Password");
                 }
             }
         });
 
+        buttonEditEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                progressBar.setVisibility(View.VISIBLE);
+                String editEmail = editTextEmail.getText().toString().trim();
+                if(user != null && !editEmail.equals(""))
+                {
+                    user.updateEmail(editEmail).addOnCompleteListener(EditProfile.this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if(task != null){
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(),"Email is changed",Toast.LENGTH_LONG).show();
+                                signOUT();
+                            }
+                            else{
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(),"Email changing is unsuccessful",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+                else if(editEmail.equals("")){
+                    progressBar.setVisibility(View.GONE);
+                    editTextEmail.setError("Please enter New Email id");
+                }
+            }
+        });
     }
 
     private void signOUT() {
