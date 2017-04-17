@@ -254,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         progressBar.setVisibility(View.GONE);
         super.onResume();
-
     }
 
     @Override

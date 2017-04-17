@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_register">
 
     <EditText
         android:id="@+id/editPassword"
@@ -23,11 +24,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit"
+        android:background="@color/btn_login_bg"
         android:layout_alignTop="@+id/editPassword"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="30dp"
-        android:layout_marginEnd="30dp" />
+        android:layout_marginEnd="30dp"
+        android:layout_alignBottom="@+id/editPassword" />
 
     <ProgressBar
         android:id="@+id/edit_progressbar"
@@ -56,10 +59,12 @@
         android:id="@+id/button_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editTextEmail"
         android:layout_alignLeft="@+id/editPasswordButton"
         android:layout_alignStart="@+id/editPasswordButton"
-        android:text="Edit" />
+        android:background="@color/btn_login_bg"
+        android:text="Edit"
+        android:layout_alignBottom="@+id/editTextEmail"
+        />
 
     <ImageButton
         android:id="@+id/homeButton"
@@ -68,6 +73,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp"
-        app:srcCompat="@drawable/chat" />
+        app:srcCompat="@drawable/chat"
+        android:background="@color/btn_login_bg"/>
 
 </RelativeLayout>
