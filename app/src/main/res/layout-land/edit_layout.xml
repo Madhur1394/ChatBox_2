@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_register">
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Edit Password"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/edit_progressbar"
+        android:layout_alignEnd="@+id/edit_progressbar"
+        android:textColor="@color/input_login"
+        android:textColorHint="@color/input_login_hint"/>
+
+    <Button
+        android:id="@+id/editPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:background="@color/btn_login_bg"
+        android:layout_alignTop="@+id/editPassword"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignBottom="@+id/editPassword" />
+
+    <ProgressBar
+        android:id="@+id/edit_progressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editTextEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Edit Email"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/editPassword"
+        android:layout_alignStart="@+id/editPassword"
+        android:textColor="@color/input_login"
+        android:textColorHint="@color/input_login_hint"/>
+
+    <Button
+        android:id="@+id/button_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editPasswordButton"
+        android:layout_alignStart="@+id/editPasswordButton"
+        android:background="@color/btn_login_bg"
+        android:text="Edit"
+        android:layout_alignBottom="@+id/editTextEmail"
+        />
+
+    <ImageButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        app:srcCompat="@drawable/chat"
+        android:background="@color/btn_login_bg"/>
+
+</RelativeLayout>

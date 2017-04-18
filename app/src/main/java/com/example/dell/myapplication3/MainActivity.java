@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent,"Complete action using"),RC_PHOTO_PICKER);
             }
         });
-
     }
 
     private void uploadFile(Uri selectImageUri) {
