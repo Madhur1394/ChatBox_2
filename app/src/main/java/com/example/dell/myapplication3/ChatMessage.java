@@ -9,13 +9,23 @@ public class ChatMessage {
     private String text;
     private String name;
     private String photoUrl;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public ChatMessage() {
     }
-    public ChatMessage(String text, String name, String photoUrl) {
+    public ChatMessage(String text, String name, String photoUrl,String id) {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
+        this.id=id;
     }
 
     public String getText() {

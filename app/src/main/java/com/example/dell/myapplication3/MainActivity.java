@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.text.method.CharacterPickerDialog;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -61,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
     public String userName = "ANONYMOUS";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton floatingActionButton_att = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
 
         // Initialize message ListView and its adapter
-        List<ChatMessage> chatMessages = new ArrayList<>();
+        final List<ChatMessage> chatMessages = new ArrayList<>();
         messageAdapter = new MessageAdapter(this, R.layout.item_message, chatMessages);
         listView_message.setAdapter(messageAdapter);
 
@@ -100,8 +101,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //For Save Messgaes
-                ChatMessage chatMessage = new ChatMessage(editText_message.getText().toString().trim(),userName,null);
-                mDatabaseReference.push().setValue(chatMessage);
+
+                String id = mDatabaseReference.push().getKey();
+                ChatMessage chatMessage = new ChatMessage(editText_message.getText().toString().trim(),userName,null,id);
+                mDatabaseReference.child(id).setValue(chatMessage);
                 editText_message.setText("");
             }
         });
@@ -168,11 +171,46 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent,"Complete action using"),RC_PHOTO_PICKER);
             }
         });
+
+        listView_message.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ChatMessage chatMessage = chatMessages.get(position);
+                final DatabaseReference db = FirebaseDatabase.getInstance().getReference("messages").child(chatMessage.getId());
+
+                Toast.makeText(getApplication(),"Item is clicked",Toast.LENGTH_LONG).show();
+                //Creating the Popup menu
+
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this,listView_message);
+
+                //inflating the popup using xml file
+                popupMenu.getMenuInflater().inflate(R.menu.manu_popup,popupMenu.getMenu());
+
+                //registering popup with onMenuItemClickListener
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id=item.getItemId();
+                        if(id==R.id.copy){
+
+                         Toast.makeText(getApplicationContext(),"Copy is selected",Toast.LENGTH_LONG).show();
+                        }
+                        if(id==R.id.delete){
+                            db.removeValue();
+                            userSignedInInitialize();
+                            Toast.makeText(getApplicationContext(),"Message is Delete",Toast.LENGTH_LONG).show();
+                        }
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+                return true;
+            }
+        });
     }
-
-    private void uploadFile(Uri selectImageUri) {
-
-        //displaying progress dialog while image is uploading
+splaying progress dialog while image is uploading
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading");
         progressDialog.show();
@@ -188,8 +226,9 @@ public class MainActivity extends AppCompatActivity {
                 //dismissing the progress dialog
                 progressDialog.dismiss();
 
-                ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString());
-                mDatabaseReference.push().setValue(chatMessage);
+                String id = mDatabaseReference.push().getKey();
+                ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString(),id);
+                mDatabaseReference.child(id).setValue(chatMessage);
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
