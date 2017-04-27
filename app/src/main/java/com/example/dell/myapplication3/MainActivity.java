@@ -76,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
         listView_message = (ListView) findViewById(R.id.messageListView);
 
         Bundle extras = getIntent().getExtras();
-        if(extras !=null) {
-           userName = extras.getString("user_name");
+        if (extras != null) {
+            userName = extras.getString("user_name");
         }
-        Toast.makeText(getApplicationContext(),userName,Toast.LENGTH_LONG).show();
-
-
+        Toast.makeText(getApplicationContext(), userName, Toast.LENGTH_LONG).show();
 
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 //For Save Messgaes
 
                 String id = mDatabaseReference.push().getKey();
-                ChatMessage chatMessage = new ChatMessage(editText_message.getText().toString().trim(),userName,null,id);
+                ChatMessage chatMessage = new ChatMessage(editText_message.getText().toString().trim(), userName, null, id);
                 mDatabaseReference.child(id).setValue(chatMessage);
                 editText_message.setText("");
             }
@@ -112,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         //For message write
         editText_message.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -122,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
                     fab.setEnabled(false);
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         //Authentication code.
@@ -135,15 +136,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
+                if (user != null) {
                     //User signed in
                     //Toast.makeText(getApplicationContext(),"User is signed in",Toast.LENGTH_LONG).show();
                     userSignedInInitialize();
-                }
-                else{
+                } else {
                     //User Signed Out
                     userSignedOutCleanUp();
-                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
                 }
             }
@@ -167,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
-                startActivityForResult(Intent.createChooser(intent,"Complete action using"),RC_PHOTO_PICKER);
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
             }
         });
 
@@ -179,27 +179,27 @@ public class MainActivity extends AppCompatActivity {
                 ChatMessage chatMessage = chatMessages.get(position);
                 final DatabaseReference db = FirebaseDatabase.getInstance().getReference("messages").child(chatMessage.getId());
 
-                Toast.makeText(getApplication(),"Item is clicked",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplication(), "Item is clicked", Toast.LENGTH_LONG).show();
                 //Creating the Popup menu
 
-                PopupMenu popupMenu = new PopupMenu(MainActivity.this,listView_message);
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this, listView_message);
 
                 //inflating the popup using xml file
-                popupMenu.getMenuInflater().inflate(R.menu.manu_popup,popupMenu.getMenu());
+                popupMenu.getMenuInflater().inflate(R.menu.manu_popup, popupMenu.getMenu());
 
                 //registering popup with onMenuItemClickListener
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        int id=item.getItemId();
-                        if(id==R.id.copy){
+                        int id = item.getItemId();
+                        if (id == R.id.copy) {
 
-                         Toast.makeText(getApplicationContext(),"Copy is selected",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Copy is selected", Toast.LENGTH_LONG).show();
                         }
-                        if(id==R.id.delete){
+                        if (id == R.id.delete) {
                             db.removeValue();
                             userSignedInInitialize();
-                            Toast.makeText(getApplicationContext(),"Message is Delete",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Message is Delete", Toast.LENGTH_LONG).show();
                         }
                         return true;
                     }
@@ -210,47 +210,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-splaying progress dialog while image is uploading
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Uploading");
-        progressDialog.show();
-
-        //Get a reference to store file at chat_photos/<FILENAME>
-        StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
-
-        //Upload File To Firebase Storage
-        photoRef.putFile(selectImageUri).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                //dismissing the progress dialog
-                progressDialog.dismiss();
-
-                String id = mDatabaseReference.push().getKey();
-                ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString(),id);
-                mDatabaseReference.child(id).setValue(chatMessage);
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                //displaying the upload progress
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-            }
-        });
-    }
 
     private void userSignedInInitialize() {
 
-        if(childEventListener == null) {
+        if (childEventListener == null) {
 
             childEventListener = new ChildEventListener() {
                 @Override
@@ -259,14 +222,22 @@ splaying progress dialog while image is uploading
                     messageAdapter.add(chatMessage);
                     progressBar.setVisibility(View.INVISIBLE);
                 }
+
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
                 @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
                 @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
                 @Override
-                public void onCancelled(DatabaseError databaseError) {}
+                public void onCancelled(DatabaseError databaseError) {
+                }
             };
             mDatabaseReference.addChildEventListener(childEventListener);
         }
@@ -274,8 +245,7 @@ splaying progress dialog while image is uploading
 
     private void userSignedOutCleanUp() {
 
-        if(childEventListener != null)
-        {
+        if (childEventListener != null) {
             mDatabaseReference.removeEventListener(childEventListener);
         }
         messageAdapter.clear();
@@ -322,7 +292,7 @@ splaying progress dialog while image is uploading
             return true;
         }
         if (id == R.id.action_edit) {
-            startActivity(new Intent(MainActivity.this,EditProfile.class));
+            startActivity(new Intent(MainActivity.this, EditProfile.class));
             return true;
         }
 
@@ -332,9 +302,51 @@ splaying progress dialog while image is uploading
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data.getData()!=null){
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data.getData() != null) {
             Uri selectImageUri = data.getData();
             uploadFile(selectImageUri);
         }
     }
+
+
+    private void uploadFile(Uri selectImageUri) {
+//displaying progress dialog while image is uploading
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading");
+        progressDialog.show();
+
+        //Get a reference to store file at chat_photos/<FILENAME>
+        StorageReference photoRef = chatPhotostorageReference.child(selectImageUri.getLastPathSegment());
+
+        //Upload File To Firebase Storage
+        photoRef.putFile(selectImageUri).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                //dismissing the progress dialog
+                progressDialog.dismiss();
+
+                String id = mDatabaseReference.push().getKey();
+                ChatMessage chatMessage = new ChatMessage(null,userName,taskSnapshot.getDownloadUrl().toString(),id);
+                mDatabaseReference.child(id).setValue(chatMessage);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                //displaying the upload progress
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+            }
+        });
+    }
+
+
 }
